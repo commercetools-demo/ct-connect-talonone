@@ -2,12 +2,13 @@ import getCartEffectHandlers from '../effects/cart/index'
 import { CTP_TAX_CATEGORY_ID } from '../../env'
 import { getCartActions } from '../actions'
 import { getDiscountApplied } from '../../handlers/effects/cart/setDiscount'
-
+import { get } from 'lodash'
 import { CartReference, LineItem } from '@commercetools/platform-sdk'
 import { TalonOneUtils } from '../../services/TalonOne'
 import { logger } from '../../services/utils/logger'
 
 const CTP_PRODUCT_LOCALE = process.env.CTP_PRODUCT_LOCALE || 'en-US'
+const CTP_ATTRIBUTE_NAMES = process.env.CTP_ATTRIBUTE_NAMES || 'store.key'
 
 export const cartEventsHandler = async (
   talonOneUtils: TalonOneUtils,
@@ -27,7 +28,12 @@ export const cartEventsHandler = async (
         sku: lineItem.variant.sku,
         quantity: lineItem.quantity,
         price: lineItem.price.value.centAmount
-      }))
+      })),
+      attributes: CTP_ATTRIBUTE_NAMES.split(',').reduce((acc : any, curr: string) => {
+        const value = get(cart, curr)
+        if (value) acc[curr] = { key: curr, value: value.toString() }
+        return acc
+      }, {})
     })
 
     // here are we handle different effects that were previously applied to the cart,

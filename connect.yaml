@@ -7,20 +7,22 @@ deployAs:
       preUndeploy: npm install && npm run build && npm run connector:pre-undeploy
     configuration:
       standardConfiguration:
-        - key: CTP_LOCALE
+        - key: CTP_PRODUCT_LOCALE
           description: commercetools Composable Commerce locale
         - key: CTP_REGION
           description: commercetools Composable Commerce API region
-      securedConfiguration:
-        - key: TALON_ONE_API
-          description: Talon.One API keys and API URLs in JSON format
         - key: CTP_TAX_CATEGORY_ID
           description: commercetools Composable Commerce tax category ID
         - key: CTP_PROJECT_KEY
           description: commercetools Composable Commerce project key
         - key: CTP_CLIENT_ID
           description: commercetools Composable Commerce client ID
-        - key: CTP_CLIENT_SECRET
-          description: commercetools Composable Commerce client secret
         - key: CTP_SCOPE
           description: commercetools Composable Commerce scope
+        - key: CTP_ATTRIBUTE_NAMES
+          description: comma separated attribute names to map to Talon.One from cart to session
+      securedConfiguration:
+        - key: TALON_ONE_API
+          description: Talon.One API keys and API URLs in JSON format
+        - key: CTP_CLIENT_SECRET
+          description: commercetools Composable Commerce client secret
