@@ -20,22 +20,28 @@ export const cartEventsHandler = async (
   if (!cart) return []
 
   try {
-    const { effects } = await updateCustomerSession(id, {
-      state: 'open',
-      profileId: cart?.customerId || cart?.anonymousId,
-      cartItems: cart?.lineItems.map((lineItem: LineItem) => ({
-        name: lineItem.name[CTP_PRODUCT_LOCALE], // TODO: handle localization
-        sku: lineItem.variant.sku,
-        quantity: lineItem.quantity,
-        price: lineItem.price.value.centAmount
-      })),
-      attributes: CTP_ATTRIBUTE_NAMES.split(',').reduce((acc : any, curr: string) => {
-        const value = get(cart, curr)
-        const key = curr.replace(/\./g, '_')
-        if (value) acc[key] = value.toString()
-        return acc
-      }, {})
-    })
+    const { effects } = await updateCustomerSession(
+      cart?.businessUnit?.key || id,
+      {
+        state: 'open',
+        profileId: cart?.customerId || cart?.anonymousId,
+        cartItems: cart?.lineItems.map((lineItem: LineItem) => ({
+          name: lineItem.name[CTP_PRODUCT_LOCALE], // TODO: handle localization
+          sku: lineItem.variant.sku,
+          quantity: lineItem.quantity,
+          price: lineItem.price.value.centAmount
+        })),
+        attributes: CTP_ATTRIBUTE_NAMES.split(',').reduce(
+          (acc: any, curr: string) => {
+            const value = get(cart, curr)
+            const key = curr.replace(/\./g, '_')
+            if (value) acc[key] = value.toString()
+            return acc
+          },
+          {}
+        )
+      }
+    )
 
     // here are we handle different effects that were previously applied to the cart,
     // and clean them if necessary

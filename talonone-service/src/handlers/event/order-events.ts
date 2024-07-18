@@ -42,9 +42,12 @@ export const orderEventsHandler = async (
 
     // The session id is suppose to exist since this comes from a cart
     if (order?.cart?.id) {
-      const { effects } = await updateCustomerSession(order?.cart?.id, {
-        state: orderState
-      })
+      const { effects } = await updateCustomerSession(
+        order?.businessUnit?.key || order?.cart?.id,
+        {
+          state: orderState
+        }
+      )
 
       const handlers = getOrderEffectHandlers()
       const actions = await getOrderActions(order, effects, handlers)
