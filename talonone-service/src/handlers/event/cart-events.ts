@@ -31,7 +31,8 @@ export const cartEventsHandler = async (
       })),
       attributes: CTP_ATTRIBUTE_NAMES.split(',').reduce((acc : any, curr: string) => {
         const value = get(cart, curr)
-        if (value) acc[curr] = value.toString()
+        const key = curr.replace(/\./g, '_')
+        if (value) acc[key] = value.toString()
         return acc
       }, {})
     })
